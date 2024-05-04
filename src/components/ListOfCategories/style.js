@@ -1,4 +1,4 @@
-import styled from 'styled-components'
+import styled, { css } from 'styled-components'
 import { bounceDown } from '../../styles/animations'
 
 export const List = styled.ul`
@@ -8,7 +8,7 @@ export const List = styled.ul`
   &::-webkit-scrollbar {
     display: none;
   }
-  &.fixed {
+  ${props => props.$fixed && css`
     background: #fff;
     border-radius: 60px;
     box-shadow: 0 0 20px rgb(0 0 0 / 30%);
@@ -22,7 +22,7 @@ export const List = styled.ul`
     transform: scale(0.5);
     z-index: 1;
     ${bounceDown({ time: '2s' })}
-  }
+  `}
 `
 
 export const Item = styled.li`
