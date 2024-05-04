@@ -1,18 +1,11 @@
 import React, { useState, useEffect } from 'react'
-import { Category } from '../Category'
+import { Category, CategorySkeleton } from '../Category'
 import { Item, List } from './style'
+import { useGetCategories } from '../../hooks/useGetCategories'
 
 export const ListOfCategories = () => {
-  const [categories, setCategories] = useState([])
+  const { categories, loading } = useGetCategories()
   const [showFixed, setShowFixed] = useState(false)
-
-  useEffect(() => {
-    fetch('https://petgram-server-odagora.vercel.app/categories')
-      .then(data => data.json())
-      .then(response => {
-        setCategories(response)
-      })
-  }, [])
 
   useEffect(() => {
     const onScroll = () => {
@@ -27,18 +20,22 @@ export const ListOfCategories = () => {
     }
   }, [showFixed])
 
-  const renderList = (fixed) => (
+  const renderList = ({ fixed, light }) => (
     <List $fixed={fixed}>
-      {categories.map(category => (
-        <Item key={category.id}><Category {...category} /></Item>
-      ))}
+      {loading
+        ? Array(6).fill(0).map((_, index) => (
+          <Item key={index}><CategorySkeleton light={light} /></Item>
+        ))
+        : categories.map(category => (
+          <Item key={category.id}><Category {...category} /></Item>
+        ))}
     </List>
   )
 
   return (
     <>
-      {renderList()}
-      {showFixed && renderList(true)}
+      {renderList({ light: true })}
+      {showFixed && renderList({ fixed: true })}
     </>
   )
 }
